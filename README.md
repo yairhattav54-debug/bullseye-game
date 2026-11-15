@@ -1,6 +1,3 @@
-# bullseye-game
-BULLSEYE is a fun and challenging code-breaking game inspired by Mastermind. Guess the secret combination of colors, use clues to improve your guesses, and crack the code in 10 attempts or less!
-
 # 🎯 BULLSEYE – Code Breaking Game
 
 **BULLSEYE** is a fun and challenging color guessing game inspired by the classic **Mastermind** game.
