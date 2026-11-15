@@ -67,12 +67,22 @@ h1 {
 }
 
 .status {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
   margin-bottom: 16px;
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: var(--card-light);
+  border-radius: 10px;
 }
 
 .status strong {
