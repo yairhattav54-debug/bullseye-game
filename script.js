@@ -9,6 +9,7 @@ const submitButton = document.getElementById("submit-button");
 const newGameButton = document.getElementById("new-game-button");
 const messageElement = document.getElementById("message");
 const attemptsElement = document.getElementById("attempts-left");
+const scoreElement = document.getElementById("score");
 const secretAreaElement = document.getElementById("secret-area");
 const secretPegsElement = document.getElementById("secret-pegs");
 
@@ -29,6 +30,7 @@ function startNewGame() {
   renderAttempts();
   updateControls();
 
+  scoreElement.textContent = "0";
   messageElement.textContent = "";
   messageElement.className = "message";
   secretPegsElement.innerHTML = "";
@@ -218,6 +220,10 @@ function updateActiveRow() {
 function endGame(won) {
   gameOver = true;
 
+  const unusedAttempts = MAX_ATTEMPTS - attemptsUsed;
+  const score = won ? 100 + unusedAttempts * 20 : 0;
+  scoreElement.textContent = score;
+
   paletteElement.querySelectorAll(".color-button").forEach((button) => {
     button.disabled = true;
   });
@@ -226,10 +232,12 @@ function endGame(won) {
     boardRows[attemptsUsed - 1].row.classList.add("win");
     messageElement.textContent =
       "You cracked the code in " + attemptsUsed +
-      (attemptsUsed === 1 ? " attempt!" : " attempts!");
+      (attemptsUsed === 1 ? " attempt!" : " attempts!") +
+      " Final score: " + score + " points.";
     messageElement.className = "message win";
   } else {
-    messageElement.textContent = "Game over! You ran out of attempts.";
+    messageElement.textContent =
+      "Game over! You ran out of attempts. Final score: 0 points.";
     messageElement.className = "message lose";
   }
 
