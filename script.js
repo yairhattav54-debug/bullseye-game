@@ -1,6 +1,10 @@
 const COLORS = ["red", "blue", "green", "yellow", "purple", "orange"];
 const CODE_LENGTH = 4;
-const MAX_ATTEMPTS = 10;
+const DIFFICULTIES = {
+  easy: { label: "Easy", attempts: 10 },
+  medium: { label: "Medium", attempts: 7 },
+  hard: { label: "Hard", attempts: 5 }
+};
 
 const slotElements = document.querySelectorAll(".slot");
 const paletteElement = document.getElementById("palette");
@@ -10,9 +14,13 @@ const newGameButton = document.getElementById("new-game-button");
 const messageElement = document.getElementById("message");
 const attemptsElement = document.getElementById("attempts-left");
 const scoreElement = document.getElementById("score");
+const difficultyOptionsElement = document.getElementById("difficulty-options");
+const difficultyValueElement = document.getElementById("difficulty-value");
 const secretAreaElement = document.getElementById("secret-area");
 const secretPegsElement = document.getElementById("secret-pegs");
 
+let currentDifficulty = "easy";
+let attemptsLimit = DIFFICULTIES.easy.attempts;
 let secretCode = [];
 let currentGuess = [];
 let attemptsUsed = 0;
@@ -20,6 +28,7 @@ let gameOver = false;
 let boardRows = [];
 
 function startNewGame() {
+  attemptsLimit = DIFFICULTIES[currentDifficulty].attempts;
   secretCode = generateSecretCode();
   currentGuess = [];
   attemptsUsed = 0;
@@ -28,6 +37,7 @@ function startNewGame() {
   createBoard();
   renderSlots();
   renderAttempts();
+  renderDifficulty();
   updateControls();
 
   scoreElement.textContent = "0";
@@ -54,7 +64,7 @@ function createBoard() {
   boardElement.innerHTML = "";
   boardRows = [];
 
-  for (let rowIndex = 0; rowIndex < MAX_ATTEMPTS; rowIndex++) {
+  for (let rowIndex = 0; rowIndex < attemptsLimit; rowIndex++) {
     const row = document.createElement("div");
     row.className = "board-row";
 
@@ -127,7 +137,24 @@ function renderSlots() {
 }
 
 function renderAttempts() {
-  attemptsElement.textContent = MAX_ATTEMPTS - attemptsUsed;
+  attemptsElement.textContent = attemptsLimit - attemptsUsed;
+}
+
+function renderDifficulty() {
+  difficultyValueElement.textContent = DIFFICULTIES[currentDifficulty].label;
+  difficultyOptionsElement.querySelectorAll(".difficulty-button").forEach((button) => {
+    const isActive = button.dataset.difficulty === currentDifficulty;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+}
+
+function setDifficulty(difficulty) {
+  if (!DIFFICULTIES[difficulty] || difficulty === currentDifficulty) {
+    return;
+  }
+  currentDifficulty = difficulty;
+  startNewGame();
 }
 
 function updateControls() {
@@ -175,7 +202,7 @@ function submitGuess() {
 
   if (result.bulls === CODE_LENGTH) {
     endGame(true);
-  } else if (attemptsUsed >= MAX_ATTEMPTS) {
+  } else if (attemptsUsed >= attemptsLimit) {
     endGame(false);
   } else {
     updateActiveRow();
@@ -212,7 +239,7 @@ function updateActiveRow() {
     boardRow.row.classList.remove("active");
   });
 
-  if (!gameOver && attemptsUsed < MAX_ATTEMPTS) {
+  if (!gameOver && attemptsUsed < attemptsLimit) {
     boardRows[attemptsUsed].row.classList.add("active");
   }
 }
@@ -220,7 +247,7 @@ function updateActiveRow() {
 function endGame(won) {
   gameOver = true;
 
-  const unusedAttempts = MAX_ATTEMPTS - attemptsUsed;
+  const unusedAttempts = attemptsLimit - attemptsUsed;
   const score = won ? 100 + unusedAttempts * 20 : 0;
   scoreElement.textContent = score;
 
@@ -269,6 +296,14 @@ document.getElementById("slots").addEventListener("click", (event) => {
     return;
   }
   removeColorFromSlot(Number(slot.dataset.index));
+});
+
+difficultyOptionsElement.addEventListener("click", (event) => {
+  const button = event.target.closest(".difficulty-button");
+  if (!button) {
+    return;
+  }
+  setDifficulty(button.dataset.difficulty);
 });
 
 submitButton.addEventListener("click", submitGuess);
