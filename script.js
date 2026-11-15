@@ -5,6 +5,7 @@ const DIFFICULTIES = {
   medium: { label: "Medium", attempts: 7 },
   hard: { label: "Hard", attempts: 5 }
 };
+const BEST_SCORE_KEY = "bullseye-best-score";
 
 const slotElements = document.querySelectorAll(".slot");
 const paletteElement = document.getElementById("palette");
@@ -14,6 +15,7 @@ const newGameButton = document.getElementById("new-game-button");
 const messageElement = document.getElementById("message");
 const attemptsElement = document.getElementById("attempts-left");
 const scoreElement = document.getElementById("score");
+const bestScoreElement = document.getElementById("best-score");
 const difficultyOptionsElement = document.getElementById("difficulty-options");
 const difficultyValueElement = document.getElementById("difficulty-value");
 const secretAreaElement = document.getElementById("secret-area");
@@ -25,6 +27,7 @@ let secretCode = [];
 let currentGuess = [];
 let attemptsUsed = 0;
 let gameOver = false;
+let bestScore = 0;
 let boardRows = [];
 
 function startNewGame() {
@@ -41,6 +44,7 @@ function startNewGame() {
   updateControls();
 
   scoreElement.textContent = "0";
+  bestScoreElement.textContent = bestScore;
   messageElement.textContent = "";
   messageElement.className = "message";
   secretPegsElement.innerHTML = "";
@@ -157,6 +161,23 @@ function setDifficulty(difficulty) {
   startNewGame();
 }
 
+function loadBestScore() {
+  try {
+    const saved = Number(localStorage.getItem(BEST_SCORE_KEY));
+    return Number.isFinite(saved) && saved > 0 ? saved : 0;
+  } catch (error) {
+    return 0;
+  }
+}
+
+function saveBestScore(value) {
+  try {
+    localStorage.setItem(BEST_SCORE_KEY, String(value));
+  } catch (error) {
+    // Storage may be unavailable; the game still works without persistence.
+  }
+}
+
 function updateControls() {
   submitButton.disabled = gameOver || currentGuess.length !== CODE_LENGTH;
 }
@@ -230,7 +251,7 @@ function renderGuessRow(rowIndex, guess, result) {
   boardRow.row.setAttribute(
     "aria-label",
     "Attempt " + (rowIndex + 1) + ": " + guess.join(", ") + ". " +
-      result.bulls + " bulls, " + result.hits + " hits."
+    result.bulls + " bulls, " + result.hits + " hits."
   );
 }
 
@@ -249,7 +270,15 @@ function endGame(won) {
 
   const unusedAttempts = attemptsLimit - attemptsUsed;
   const score = won ? 100 + unusedAttempts * 20 : 0;
+  const isNewBest = won && score > bestScore;
+
   scoreElement.textContent = score;
+
+  if (isNewBest) {
+    bestScore = score;
+    bestScoreElement.textContent = bestScore;
+    saveBestScore(bestScore);
+  }
 
   paletteElement.querySelectorAll(".color-button").forEach((button) => {
     button.disabled = true;
@@ -257,10 +286,14 @@ function endGame(won) {
 
   if (won) {
     boardRows[attemptsUsed - 1].row.classList.add("win");
-    messageElement.textContent =
+    let winMessage =
       "You cracked the code in " + attemptsUsed +
       (attemptsUsed === 1 ? " attempt!" : " attempts!") +
       " Final score: " + score + " points.";
+    if (isNewBest) {
+      winMessage += " New personal best!";
+    }
+    messageElement.textContent = winMessage;
     messageElement.className = "message win";
   } else {
     messageElement.textContent =
@@ -281,6 +314,14 @@ function showSecret() {
   });
   secretAreaElement.classList.remove("hidden");
 }
+
+difficultyOptionsElement.addEventListener("click", (event) => {
+  const button = event.target.closest(".difficulty-button");
+  if (!button) {
+    return;
+  }
+  setDifficulty(button.dataset.difficulty);
+});
 
 paletteElement.addEventListener("click", (event) => {
   const button = event.target.closest(".color-button");
@@ -309,4 +350,5 @@ difficultyOptionsElement.addEventListener("click", (event) => {
 submitButton.addEventListener("click", submitGuess);
 newGameButton.addEventListener("click", startNewGame);
 
+bestScore = loadBestScore();
 startNewGame();
