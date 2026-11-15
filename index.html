@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BULLSEYE</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="game">
+    <header class="game-header">
+      <h1>BULLSEYE</h1>
+      <p class="subtitle">Crack the secret code</p>
+    </header>
+
+    <section class="card controls" aria-label="Your guess">
+      <div class="status">
+        <span>Attempts left</span>
+        <strong id="attempts-left">10</strong>
+      </div>
+
+      <div id="slots" class="slots">
+        <button type="button" class="slot" data-index="0" aria-label="Slot 1: empty"></button>
+        <button type="button" class="slot" data-index="1" aria-label="Slot 2: empty"></button>
+        <button type="button" class="slot" data-index="2" aria-label="Slot 3: empty"></button>
+        <button type="button" class="slot" data-index="3" aria-label="Slot 4: empty"></button>
+      </div>
+
+      <div id="palette" class="palette">
+        <button type="button" class="color-button color-red" data-color="red" aria-label="Red"></button>
+        <button type="button" class="color-button color-blue" data-color="blue" aria-label="Blue"></button>
+        <button type="button" class="color-button color-green" data-color="green" aria-label="Green"></button>
+        <button type="button" class="color-button color-yellow" data-color="yellow" aria-label="Yellow"></button>
+        <button type="button" class="color-button color-purple" data-color="purple" aria-label="Purple"></button>
+        <button type="button" class="color-button color-orange" data-color="orange" aria-label="Orange"></button>
+      </div>
+
+      <button type="button" id="submit-button" class="primary-button" disabled>Submit guess</button>
+
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+
+      <div id="secret-area" class="secret-area hidden">
+        <span>The secret code was:</span>
+        <div id="secret-pegs" class="pegs"></div>
+      </div>
+    </section>
+
+    <section class="card board-card" aria-label="Game board">
+      <div class="board-labels">
+        <span>#</span>
+        <span>Guess</span>
+        <span>Result</span>
+      </div>
+
+      <div id="board" class="board"></div>
+
+      <div class="legend">
+        <span class="legend-item"><span class="dot bull"></span> Bull &mdash; right color, right spot</span>
+        <span class="legend-item"><span class="dot hit"></span> Hit &mdash; right color, wrong spot</span>
+      </div>
+    </section>
+
+    <button type="button" id="new-game-button" class="secondary-button">New game</button>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
