@@ -251,7 +251,7 @@ function renderGuessRow(rowIndex, guess, result) {
   boardRow.row.setAttribute(
     "aria-label",
     "Attempt " + (rowIndex + 1) + ": " + guess.join(", ") + ". " +
-      result.bulls + " bulls, " + result.hits + " hits."
+    result.bulls + " bulls, " + result.hits + " hits."
   );
 }
 
@@ -337,6 +337,14 @@ document.getElementById("slots").addEventListener("click", (event) => {
     return;
   }
   removeColorFromSlot(Number(slot.dataset.index));
+});
+
+difficultyOptionsElement.addEventListener("click", (event) => {
+  const button = event.target.closest(".difficulty-button");
+  if (!button) {
+    return;
+  }
+  setDifficulty(button.dataset.difficulty);
 });
 
 submitButton.addEventListener("click", submitGuess);
