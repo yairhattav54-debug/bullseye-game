@@ -10,8 +10,8 @@ The goal is to **crack the secret combination of 4 colors** within a limited num
 2. Choose **4 colors** from the available color options.
 3. Click **Submit Guess** to check your guess.
 4. After each guess, you will receive feedback:
-   - 🔴 **Bull:** A correct color in the correct position.
-   - ⚪ **Hit:** A correct color in the wrong position.
+  - 🔵 **Bull:** A correct color in the correct position.
+  - ⚪ **Hit:** A correct color in the wrong position.
 5. Use the feedback to improve your next guess.
 6. Guess the complete combination before running out of attempts to **win the game!**
 
