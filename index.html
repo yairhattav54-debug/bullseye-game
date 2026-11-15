@@ -13,6 +13,25 @@
       <p class="subtitle">Crack the secret code</p>
     </header>
 
+    <section class="card difficulty-card" aria-label="Difficulty">
+      <h2 class="section-title">Difficulty</h2>
+      <div id="difficulty-options" class="difficulty-options" role="group" aria-label="Choose difficulty">
+        <button type="button" class="difficulty-button active" data-difficulty="easy" aria-pressed="true">
+          Easy
+          <small>10 attempts</small>
+        </button>
+        <button type="button" class="difficulty-button" data-difficulty="medium" aria-pressed="false">
+          Medium
+          <small>7 attempts</small>
+        </button>
+        <button type="button" class="difficulty-button" data-difficulty="hard" aria-pressed="false">
+          Hard
+          <small>5 attempts</small>
+        </button>
+      </div>
+      <p class="difficulty-note">Changing difficulty starts a new game.</p>
+    </section>
+
     <section class="card controls" aria-label="Your guess">
       <div class="status">
         <div class="stat">
@@ -22,6 +41,14 @@
         <div class="stat">
           <span>Score</span>
           <strong id="score">0</strong>
+        </div>
+        <div class="stat">
+          <span>Difficulty</span>
+          <strong id="difficulty-value">Easy</strong>
+        </div>
+        <div class="stat">
+          <span>Personal best</span>
+          <strong id="best-score">0</strong>
         </div>
       </div>
 
