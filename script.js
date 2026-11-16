@@ -3,7 +3,8 @@ const CODE_LENGTH = 4;
 const DIFFICULTIES = {
   easy: { label: "Easy", attempts: 10 },
   medium: { label: "Medium", attempts: 7 },
-  hard: { label: "Hard", attempts: 5 }
+  hard: { label: "Hard", attempts: 5 },
+  levi: { label: "Levi", attempts: 3 }
 };
 const BEST_SCORE_KEY = "bullseye-best-score";
 
@@ -269,7 +270,8 @@ function endGame(won) {
   gameOver = true;
 
   const unusedAttempts = attemptsLimit - attemptsUsed;
-  const score = won ? 100 + unusedAttempts * 20 : 0;
+  const bonus = currentDifficulty === "levi" ? 150 : 0;
+  const score = won ? 100 + unusedAttempts * 20 + bonus : 0;
   const isNewBest = won && score > bestScore;
 
   scoreElement.textContent = score;
@@ -346,6 +348,11 @@ difficultyOptionsElement.addEventListener("click", (event) => {
   }
   setDifficulty(button.dataset.difficulty);
 });
+const leviButton = document.createElement("button");
+leviButton.className = "difficulty-button";
+leviButton.dataset.difficulty = "levi";
+leviButton.textContent = "Levi";
+difficultyOptionsElement.appendChild(leviButton);
 
 submitButton.addEventListener("click", submitGuess);
 newGameButton.addEventListener("click", startNewGame);
